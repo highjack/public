@@ -1,0 +1,13 @@
+@1st.relay,@2nd.relay:user@final.domain
+relay.domain!user@domain
+user%final.domain@1st.relay
+'*+-/=?^_`{|}~#$@netmeister.org # RFC5321 allows all sorts of punctuation.
+jdoe@domain
+jdoe+whatever@domain
+jdoe+somethingelse@domain
+.jdoe@domain
+jdoe.@domain
+jd..oe@domain
+" "@netmeister.org
+"<>"@netmeister.org
+"put a literal escaped newline here\^M <--"@domain
