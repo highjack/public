@@ -1,0 +1,16 @@
+current: yourServer
+jenkins_servers:
+- name: yourServer
+  url: http://localhost:8080
+  username: admin
+  token: $TOKEN$
+  insecureSkipVerify: true
+mirrors:
+- name: default
+  url: http://mirrors.jenkins.io/
+- name: tsinghua
+  url: https://mirrors.tuna.tsinghua.edu.cn/jenkins/
+- name: huawei
+  url: https://mirrors.huaweicloud.com/jenkins/
+- name: tencent
+  url: https://mirrors.cloud.tencent.com/jenkins/
