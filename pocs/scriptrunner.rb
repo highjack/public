@@ -1,8 +1,7 @@
 #[Author] Ben 'highjack' Sheppard
 #[Title] Jira Scriptrunner 2.0.7 <= CSRF/RCE
-#[Twitter] @highjack_
+#[Twitter] @hiighjack
 #[Author Url] http://bensheppard.net/jira-scriptrunner-2-0-7/
-#[Vendor Url] https://marketplace.atlassian.com/plugins/com.onresolve.jira.groovy.groovyrunner
 #[Install] To use this copy it into  ~/.msf4/modules/exploits/windows/http/scriptrunner.rb
 
 require 'msf/core'
