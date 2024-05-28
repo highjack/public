@@ -1,7 +1,6 @@
 #[Author] Ben 'highjack' Sheppard
 #[Title] Virtual Time Clock Server v13 r2 <= Remote DLL Injection
-#[Twitter] @highjack_
-#[Author URL] http://www.bensheppard.net/2014/05/virtual-time-clock-server-v13-r2-remote.html
+#[Twitter] @hiighjack_
 #[Vendor Url] http://www.redcort.com
 #[Install] cp virtualtimeclock.rb into /root/.msf4/modules/exploits/windows/misc
 #msfconsole must then be launched as root as this exploit binds to low ports
