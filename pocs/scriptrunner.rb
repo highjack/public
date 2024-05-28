@@ -1,7 +1,6 @@
 #[Author] Ben 'highjack' Sheppard
 #[Title] Jira Scriptrunner 2.0.7 <= CSRF/RCE
 #[Twitter] @hiighjack
-#[Author Url] http://bensheppard.net/jira-scriptrunner-2-0-7/
 #[Install] To use this copy it into  ~/.msf4/modules/exploits/windows/http/scriptrunner.rb
 
 require 'msf/core'
