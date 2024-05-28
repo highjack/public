@@ -1,5 +1,5 @@
 #[Author] Ben 'highjack' Sheppard
-#[Title] Virtual Time Clock Server v13 r2 <= Remote DLL Injection
+#[Title] Virtual Time Clock Server <= v13 r2 RCE
 #[Twitter] @hiighjack_
 #[Install] cp virtualtimeclock.rb into /root/.msf4/modules/exploits/windows/misc
 #msfconsole must then be launched as root as this exploit binds to low ports
@@ -16,7 +16,7 @@ class Metasploit3 < Msf::Exploit::Remote
 
       def initialize
            super(
-               'Name'          => 'Virtual Time Clock Remote DLL Injection',
+               'Name'          => 'Virtual Time Clock RCE',
 				'Description'   => %q{
 					The application listen on a remote port of 56777 by default, it allows users to authenticate
 					themselves update the internal sqlite database with hours they have worked. However two issues have been identified,
