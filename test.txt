@@ -1,0 +1,22 @@
+import os
+from flask import Flask, request, send_file, abort
+
+app = Flask(__name__)
+
+# Base directory from which files will be served
+BASE_DIR = os.path.join(os.getcwd(), "files")
+
+@app.route('/files/<path:filename>')
+def serve_file(filename):
+    # WARNING: This code is vulnerable to directory traversal attacks.
+    # An attacker could supply a filename like "../../etc/passwd"
+    file_path = os.path.join(BASE_DIR, filename)
+
+    # Check if the file exists and is a file
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_file(file_path)
+    else:
+        abort(404)
+
+if __name__ == '__main__':
+    app.run(debug=True)
