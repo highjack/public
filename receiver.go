@@ -58,8 +58,7 @@ func handleDNSRequest(w dns.ResponseWriter, r *dns.Msg) {
             }
             mutex.Unlock()
 
-            fmt.Printf("[+] Received %d chunk(s) for %s
-", len(labels), filename)
+            fmt.Printf("[+] Received %d chunk(s) for %s", len(labels), filename)
         }
     }
 
@@ -71,8 +70,7 @@ func saveFiles() {
     defer mutex.Unlock()
 
     for filename, chunkMap := range dataStore {
-        fmt.Printf("[DEBUG] Chunks received for %s: %d
-", filename, len(chunkMap))
+        fmt.Printf("[DEBUG] Chunks received for %s: %d", filename, len(chunkMap))
 
         var keys []int
         for k := range chunkMap {
@@ -86,10 +84,8 @@ func saveFiles() {
         }
 
         b64 := b64Builder.String()
-        fmt.Printf("[DEBUG] base64 length for %s: %d
-", filename, len(b64))
-        fmt.Printf("[DEBUG] base64 data (start): %.100s...
-", b64)
+        fmt.Printf("[DEBUG] base64 length for %s: %d", filename, len(b64))
+        fmt.Printf("[DEBUG] base64 data (start): %.100s...", b64)
 
         if pad := len(b64) % 4; pad != 0 {
             b64 += strings.Repeat("=", 4-pad)
@@ -97,18 +93,15 @@ func saveFiles() {
 
         decoded, err := base64.StdEncoding.DecodeString(b64)
         if err != nil {
-            fmt.Printf("[-] Failed to decode base64 for %s: %s
-", filename, err)
+            fmt.Printf("[-] Failed to decode base64 for %s: %s", filename, err)
             continue
         }
 
         err = os.WriteFile(filename, decoded, 0644)
         if err != nil {
-            fmt.Printf("[-] Failed to write file %s: %s
-", filename, err)
+            fmt.Printf("[-] Failed to write file %s: %s", filename, err)
         } else {
-            fmt.Printf("[+] Successfully reconstructed file: %s (%d bytes)
-", filename, len(decoded))
+            fmt.Printf("[+] Successfully reconstructed file: %s (%d bytes)", filename, len(decoded))
         }
     }
 }
@@ -118,8 +111,7 @@ func startServer() {
     server := &dns.Server{Addr: ":53", Net: "udp"}
     fmt.Println("[*] DNS server listening on port 53...")
     if err := server.ListenAndServe(); err != nil {
-        fmt.Printf("[-] DNS server error: %s
-", err)
+        fmt.Printf("[-] DNS server error: %s", err)
         os.Exit(1)
     }
 }
